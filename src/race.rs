@@ -51,8 +51,7 @@ impl OnceNonZeroUsize {
     /// full.
     #[inline]
     pub fn set(&self, value: NonZeroUsize) -> Result<(), ()> {
-        let exchange =
-            self.inner.compare_exchange(0, value.get(), Ordering::AcqRel, Ordering::Acquire);
+        let exchange = self.inner.compare_exchange(0, value.get(), Ordering::AcqRel, Ordering::Acquire);
         match exchange {
             Ok(_) => Ok(()),
             Err(_) => Err(()),
@@ -92,8 +91,7 @@ impl OnceNonZeroUsize {
             Some(it) => it,
             None => {
                 let mut val = f()?.get();
-                let exchange =
-                    self.inner.compare_exchange(0, val, Ordering::AcqRel, Ordering::Acquire);
+                let exchange = self.inner.compare_exchange(0, val, Ordering::AcqRel, Ordering::Acquire);
                 if let Err(old) = exchange {
                     val = old;
                 }
@@ -209,8 +207,7 @@ impl<'a, T> OnceRef<'a, T> {
     /// full.
     pub fn set(&self, value: &'a T) -> Result<(), ()> {
         let ptr = value as *const T as *mut T;
-        let exchange =
-            self.inner.compare_exchange(ptr::null_mut(), ptr, Ordering::AcqRel, Ordering::Acquire);
+        let exchange = self.inner.compare_exchange(ptr::null_mut(), ptr, Ordering::AcqRel, Ordering::Acquire);
         match exchange {
             Ok(_) => Ok(()),
             Err(_) => Err(()),
