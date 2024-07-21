@@ -19,12 +19,7 @@
 //! `Acquire` and `Release` have very little performance overhead on most
 //! architectures versus `Relaxed`.
 
-#[cfg(feature = "critical-section")]
-use portable_atomic as atomic;
-#[cfg(not(feature = "critical-section"))]
-use core::sync::atomic;
-
-use atomic::{AtomicPtr, AtomicUsize, Ordering};
+use portable_atomic::{AtomicPtr, AtomicUsize, Ordering};
 use core::cell::UnsafeCell;
 use core::marker::PhantomData;
 use core::num::NonZeroUsize;
@@ -252,8 +247,7 @@ impl<'a, T> OnceRef<'a, T> {
     {
         let mut ptr = self.inner.load(Ordering::Acquire);
 
-        if ptr.is_null() {
-            // TODO replace with `cast_mut` when MSRV reaches 1.65.0 (also in `set`)
+        if (ptr as *const T).is_null() {
             ptr = f()? as *const T as *mut T;
             let exchange = self.inner.compare_exchange(
                 ptr::null_mut(),
