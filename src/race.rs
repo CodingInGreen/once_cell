@@ -283,9 +283,8 @@ pub use self::once_box::OnceBox;
 
 #[cfg(feature = "alloc")]
 mod once_box {
-    use super::atomic::{AtomicPtr, Ordering};
+    use portable_atomic::{AtomicPtr, Ordering};
     use core::{marker::PhantomData, ptr};
-
     use alloc::boxed::Box;
 
     /// A thread-safe cell which can be written to only once.

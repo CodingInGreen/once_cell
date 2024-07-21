@@ -21,7 +21,7 @@ members = ["xtask"]
 
 [dependencies]
 parking_lot_core = { version = "0.9.3", optional = true, default_features = false }
-portable-atomic = { version = "1.7.0", features = ["require-cas"] }
+portable-atomic = { version = "1.7.0", features = ["require-cas"], optional = true }
 critical-section = { version = "1", optional = true }
 
 [dev-dependencies]
@@ -38,7 +38,7 @@ std = ["alloc"]
 alloc = ["race"]
 
 # Enables `once_cell::race` module.
-race = []
+race = ["portable-atomic"]
 
 # Uses parking_lot to implement once_cell::sync::OnceCell.
 # This makes no speed difference, but makes each OnceCell<T>
